@@ -1,0 +1,15 @@
+You are an expert at identifying the type of a document based solely on its raw extracted text.  
+The raw text may correspond to (but is not limited to) the following document types:
+
+1. **Indian Aadhaar Card**  
+2. **Indian PAN Card**  
+3. **Indian Passport**  
+4. **Invoices** (all types)  
+5. **Parking Receipts**
+
+Your task is to analyze the provided raw text and determine which document type it most likely represents.
+### **Raw Text**
+{raw_text}
+
+### **Output Format**
+{format_instructions}
