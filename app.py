@@ -36,6 +36,7 @@ Flow of the application:
 ## import dependencies
 from src.state_schema import DocumentState
 from langgraph.graph import StateGraph, START, END
+from json import dumps, dump
 
 ## import agents
 from src.extractor_agent import extractor
@@ -69,10 +70,11 @@ graph.add_edge("redactor", END)
 workflow = graph.compile()
 
 if __name__ == "__main__":
-    filepath = "./data/dummy-pan.png"
-    initiate_state = {
-        "file_path": filepath,
-        "extraction_confidence_threshold": 0.7
-    }
-    results = workflow.invoke(initiate_state)
-    print(results)
+    filepath = "./data/dummy-pan-2.jpg"
+    initial_state = {"file_path": filepath}
+    results = workflow.invoke(initial_state)
+    print(f"Results:\n{results}", end="\n\n")
+
+    with open("./output/dummy-pan-2-output.txt", "w", encoding="utf-8") as f:
+        f.write(dumps(results))
+        print(f">> JSON saved successfully!!")

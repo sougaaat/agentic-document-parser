@@ -53,10 +53,10 @@ assert API_BACKEND, "[ATTENTION] API BACKEND NOT FOUND!!"
 assert COHERE_API_KEY, "[ATTENTION] COHERE_API_KEY NOT FOUND!!"
 
 ## prompts
-with open("./prompts/classifier_agent_prompt.txt", "r") as f:
+with open("../prompts/classifier_agent_prompt.txt", "r") as f:
     classifier_prompt_template = f.read()
 
-with open("./prompts/parser_agent_prompt.txt", "r") as f:
+with open("../prompts/parser_agent_prompt.txt", "r") as f:
     parser_prompt_template = f.read()
 
 ## load the model
