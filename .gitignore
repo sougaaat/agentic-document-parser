@@ -9,5 +9,5 @@ wheels/
 # Virtual environments
 .venv
 
-## olmOCR model
-models/olmOCR-2-7B-4bit
+## environment variable
+.env

@@ -1,12 +1,12 @@
 ## import dependencies
-from src.language_model import llm
-from src.state_schema import DocumentState
+from src.resources import llm
+from src.agent_schema import DocumentState
 from pydantic import create_model
 from langchain_core.output_parsers import JsonOutputParser
 from langchain_core.prompts import PromptTemplate
 
 ## parser prompt
-with open("./prompts/parser_agent_prompt.txt", "r") as f:
+with open("./prompts/parser_agent_prompt.md", "r") as f:
     parser_prompt_template = f.read()
 
 ## function definition for Parser Agent
@@ -31,17 +31,53 @@ def parser(state: DocumentState):
 if __name__ == "__main__":
     initial_state = {
         "document_type": "Indian Aadhaar Card",
-        "document_schema": {"aadhaar_number": int, "name": str, "father_name": str, "date_of_birth": str, "gender": str},
+        "document_schema": {"aadhaar_number": int, "name": str, "father_name": str, "date_of_birth": str, "gender": str, "address": str},
         "raw_text": """
-        Indlan Govt iD  
-        Aadhr No :  4823 9B7  1102
-        Name :   SOUGAT  DE¥
-        F/Name: Gopal  Dey
-        DOB : 12/0B/19B9
-        Gendr : M ALE 
-        
-        — uidai.g0v.in —
+        GOVERNMENT OF INDIA
+        UNIQUE IDENTIFICATION AUTHORITY OF INDIA
+
+        Name
+        SURESH KUMAR
+        VERMA
+
+        FATHER
+        VINAY KUMAR                                 VERMA
+
+        DOB
+        12 / 03 / 1992
+
+        Male
+
+        Aadhaar No
+        1234 5678 9012
+
+        Address
+        H NO 45
+        STREET NO 2
+        LAJPAT NAGAR
+        NEW DELHI
+        DELHI 110024
+
+        Signature
+
         """
     }
     results = parser(initial_state)
     print(results)
+
+    # """
+    # (agentic-document-parser) C:\Users\sodey\Downloads\_projects\agentic-document-parser>uv run -m src.parser_agent
+    # {'structured_output': {'aadhaar_number': 123456789012, 'name': 'SURESH KUMAR VERMA', 'father_name': 'VINAY KUMAR VERMA', 'date_of_birth': '12/03/1992', 'gender': 'Male', 'address': 'H NO 45, STREET NO 2, LAJPAT NAGAR, NEW DELHI, DELHI 110024'}}
+
+    # Pretty JSON:
+    # {
+    #     "structured_output":{
+    #         "aadhaar_number":123456789012,
+    #         "name":"SURESH KUMAR VERMA",
+    #         "father_name":"VINAY KUMAR VERMA",
+    #         "date_of_birth":"12/03/1992",
+    #         "gender":"Male",
+    #         "address":"H NO 45, STREET NO 2, LAJPAT NAGAR, NEW DELHI, DELHI 110024"
+    #     }
+    # }
+    # """

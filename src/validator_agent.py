@@ -1,14 +1,13 @@
 ## import dependencies
 from langchain_core.prompts import PromptTemplate
-
-from src.language_model import llm
-from src.state_schema import DocumentState
+from src.resources import llm
+from src.agent_schema import DocumentState
 from pydantic import BaseModel, Field
 from typing import List
 from langchain_core.output_parsers import JsonOutputParser
 
 ## validator agent prompt
-with open("./prompts/validator_agent_prompt.txt", "r") as f:
+with open("./prompts/validator_agent_prompt.md", "r") as f:
     validator_agent_prompt = f.read()
 
 ## validation schema
@@ -42,6 +41,12 @@ def validator(state: DocumentState):
     validation_score = round(len(resp["valid_fields"])/len(state["document_schema"]), 3)
     return {"validated_features": resp["valid_fields"], "validation_score": validation_score}
 
+def validation_router(state: DocumentState):
+    if (state['validation_score'] < state['validation_score_threshold']) or (state['max_iterations_allowed'] < state['iterations']):
+        return "retry"
+    else:
+        return "approved"
+
 ## ---- TEST -----
 if __name__ == "__main__":
     initial_state = {
@@ -65,3 +70,22 @@ if __name__ == "__main__":
     }
     result = validator(initial_state)
     print(result)
+
+    # """
+    # (agentic-document-parser) C:\Users\sodey\Downloads\_projects\agentic-document-parser>uv run -m src.validator_agent
+    # {'validated_features': ['aadhaar_number', 'name', 'father_name', 'date_of_birth', 'gender'], 'validation_score': 0.833}
+
+    # Pretty JSON:
+    # {
+    #     "validated_features":[
+    #         "aadhaar_number",
+    #         "name",
+    #         "father_name",
+    #         "date_of_birth",
+    #         "gender"
+    #     ],
+    #     "validation_score":0.833
+    # }
+
+    # Explanation: The `validation_score` is 0.833 is because the structured output does not have a key for the key `address`, therefore validation score is 5/6 ≈ 0.833.
+    # """

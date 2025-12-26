@@ -5,6 +5,99 @@ An end-to-end agentic document understanding system capable of extracting text f
 **Important Note:**  
 The first run will take **at least 15 minutes** because `olmOCR` is a heavy model and relies on the Qwen Vision-Language Model (VLM) internally. After the initial model download and setup, subsequent runs are much faster.
 
+# Flow of the application:
+1. Extractor Agent
+   - Input: File Path (for now only images)
+   - Output: Extracted Raw Text, Confidence Score based on the extraction
+2. Classifier Agent
+   I. Input:
+         A. Raw Text (from Extractor Agent)
+   II. Output: {'document_type': _, 'document_schema': _}
+3. Paser Agent
+   I. Input:
+         A. Raw Text (from Extractor Agent)
+         B. Document Type (from classifier Agent)
+         C. Document Schema (from classifier Agent)
+   II. Output: Structured Output based on the Pydantic document schema
+4. Validator Agent:
+   I. Input:
+         A. Raw Text (from Extractor Agent)
+         B. Document Type (from classifier Agent)
+         C. Document Schema (from classifier Agent)
+         D. Structured Output (from Parser Agent)
+   II. Output: {"validation_score": _, "validated_structured_output": _} (Validation Score is based on custom logic defined below)
+5. Redactor Agent
+   I. Input:
+         A. Validated Structured Output (from Validator Agent)
+         B. Document Type
+   II. Identify PII (Personally Identifiable Information) fields
+   III. Redact those fields
+   IV. Output: {"redacted_output: _, "redacted_features": _}
+6. Reporter Agent
+   I. Input:
+         A. State
+   II. Output: print entire state
+
+---
+
+## Graph Flow
+                                 +-----------+                        
+                                 | __start__ |                        
+                                 +-----------+                        
+                                        *                             
+                                        *                             
+                                        *                             
+                                 +------------+                       
+                                 | init_state |                       
+                                 +------------+                       
+                                        *                             
+                                        *                             
+                                        *                             
+                             +-------------------+                    
+                             | format_identifier |                    
+                            .+-------------------+..                  
+                        ....            .           .....             
+                   .....                 .               ....         
+                ...                      .                   .....    
++--------------------+          +-----------------+               ... 
+| document_extractor |          | image_extractor |                 . 
++--------------------+          +-----------------+                 . 
+                  ***            ***                                . 
+                     **        **                                   . 
+                       **    **                                     . 
+                   +------------+                                   . 
+                   | classifier |                                   . 
+                   +------------+                                   . 
+                          *                                         . 
+                          *                                         . 
+                          *                                         . 
+                +------------------+                                . 
+                | schema_generator |                                . 
+                +------------------+                                . 
+                          *                                         . 
+                          *                                         . 
+                          *                                         . 
+                     +--------+                                   ... 
+                     | parser |                              .....    
+                     +--------+*                         ....         
+                                ***                 .....             
+                                   **          .....                  
+                                     **     ...                       
+                                 +-----------+                        
+                                 | validator |                        
+                                 +-----------+                        
+                                        .                             
+                                        .                             
+                                        .                             
+                                  +----------+                        
+                                  | redactor |                        
+                                  +----------+                        
+                                        *                             
+                                        *                             
+                                        *                             
+                                  +---------+                         
+                                  | __end__ |                         
+                                  +---------+   
 ---
 
 ## Quick Start
@@ -24,7 +117,7 @@ The first run will take **at least 15 minutes** because `olmOCR` is a heavy mode
 
 2. Start the main application:
    ```bash
-   uv run app.py
+   uv run orchestrator.py
    ```
 
 ---
