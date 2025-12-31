@@ -14,7 +14,10 @@ assert OPENAI_API_KEY, "[ATTENTION] OPENAI API NOT FOUND!!"
 os.environ['COHERE_API_KEY'] = COHERE_API_KEY
 os.environ['OPENAI_API_KEY'] = OPENAI_API_KEY
 
-## model instance
+## poppler path
+POPPLER_PATH = os.getenv('POPPLER_PATH')
+
+## chat completion model
 llm = ChatCohere(temperature=0.01)
 
 ## for OCR

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmation - TechNova Supply Co.</title>
+    <style>
+        body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0; -webkit-font-smoothing: antialiased; }
+        .container { max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 20px; border-radius: 8px; margin-top: 20px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .header { border-bottom: 2px solid #0056b3; padding-bottom: 20px; margin-bottom: 20px; }
+        .logo { font-size: 24px; font-weight: bold; color: #0056b3; text-decoration: none; }
+        .order-status { color: #28a745; font-weight: bold; font-size: 16px; margin-top: 10px; }
+        .section-title { font-size: 14px; text-transform: uppercase; color: #666; letter-spacing: 1px; margin-bottom: 10px; margin-top: 25px; border-bottom: 1px solid #eee; padding-bottom: 5px; }
+        .info-grid { display: table; width: 100%; }
+        .info-column { display: table-cell; width: 50%; vertical-align: top; padding-right: 10px; }
+        .item-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        .item-table th { text-align: left; background-color: #f9f9f9; padding: 10px; font-size: 12px; color: #555; }
+        .item-table td { padding: 12px 10px; border-bottom: 1px solid #eee; font-size: 14px; }
+        .totals-table { width: 100%; margin-top: 15px; }
+        .totals-table td { padding: 5px 10px; text-align: right; }
+        .grand-total { font-size: 18px; font-weight: bold; color: #333; }
+        .footer { text-align: center; font-size: 12px; color: #999; margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee; }
+        .kv-pair { margin-bottom: 5px; font-size: 14px; color: #333; }
+        .label { font-weight: bold; color: #555; margin-right: 5px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <div class="logo">TechNova Supply Co.</div>
+        <h1>Thanks for your order, Sarah!</h1>
+        <p>We have received your order and are getting it ready for shipment.</p>
+        <div class="order-status">Current Status: Processing</div>
+    </div>
+
+    <div style="background-color: #f8f9fa; padding: 15px; border-radius: 5px;">
+        <div class="kv-pair"><span class="label">Order Number:</span> #TN-2024-8921XQ</div>
+        <div class="kv-pair"><span class="label">Order Date:</span> October 24, 2024</div>
+        <div class="kv-pair"><span class="label">Transaction ID:</span> TXN_9982310045_PP</div>
+        <div class="kv-pair"><span class="label">Estimated Delivery:</span> Oct 28 - Oct 30, 2024</div>
+    </div>
+
+    <div class="info-grid">
+        <div class="info-column">
+            <div class="section-title">Shipping To</div>
+            <address style="font-style: normal; line-height: 1.5;">
+                <strong>Sarah Jenkins</strong><br>
+                4291 Evergreen Terrace, Apt 4B<br>
+                Portland, OR 97204<br>
+                United States<br>
+                <span class="label">Phone:</span> (503) 555-0199
+            </address>
+        </div>
+        <div class="info-column">
+            <div class="section-title">Billing Address</div>
+            <address style="font-style: normal; line-height: 1.5;">
+                <strong>Sarah Jenkins</strong><br>
+                4291 Evergreen Terrace, Apt 4B<br>
+                Portland, OR 97204<br>
+                United States
+            </address>
+            <div style="margin-top: 15px;">
+                <div class="section-title">Payment Method</div>
+                <div>Visa ending in <strong>4242</strong></div>
+                <div>Auth Code: 882910</div>
+            </div>
+        </div>
+    </div>
+
+    <div style="margin-top: 20px;">
+        <div class="section-title">Shipping Method</div>
+        <div>FedEx Express Saver (2-3 Business Days)</div>
+        <div class="kv-pair"><span class="label">Tracking Number:</span> <a href="#">782201993321</a></div>
+    </div>
+
+    <div class="section-title">Order Summary</div>
+    <table class="item-table">
+        <thead>
+            <tr>
+                <th width="50%">Item</th>
+                <th width="20%">SKU</th>
+                <th width="10%">Qty</th>
+                <th width="20%" style="text-align: right;">Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <strong>Logitech MX Master 3S Performance Mouse</strong><br>
+                    <span style="font-size: 12px; color: #777;">Color: Graphite | Connectivity: Bluetooth</span>
+                </td>
+                <td>LOG-MX3S-GR</td>
+                <td>1</td>
+                <td style="text-align: right;">$99.99</td>
+            </tr>
+            <tr>
+                <td>
+                    <strong>Keychron K2 Pro Mechanical Keyboard</strong><br>
+                    <span style="font-size: 12px; color: #777;">Switch: Brown | Backlight: RGB</span>
+                </td>
+                <td>KC-K2P-BRN</td>
+                <td>1</td>
+                <td style="text-align: right;">$119.00</td>
+            </tr>
+            <tr>
+                <td>
+                    <strong>Anker USB-C to USB-C Cable (6ft)</strong><br>
+                    <span style="font-size: 12px; color: #777;">Rating: 100W | Nylon Braided</span>
+                </td>
+                <td>ANK-USBC-6FT</td>
+                <td>2</td>
+                <td style="text-align: right;">$12.50</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table class="totals-table">
+        <tr>
+            <td>Subtotal:</td>
+            <td>$243.99</td>
+        </tr>
+        <tr>
+            <td>Shipping & Handling:</td>
+            <td>$15.00</td>
+        </tr>
+        <tr>
+            <td>Discount (WELCOME10):</td>
+            <td style="color: #dc3545;">-$24.40</td>
+        </tr>
+        <tr>
+            <td>Tax (8.5%):</td>
+            <td>$19.94</td>
+        </tr>
+        <tr>
+            <td class="grand-total" style="padding-top: 10px; border-top: 2px solid #333;">Total Paid:</td>
+            <td class="grand-total" style="padding-top: 10px; border-top: 2px solid #333;">$254.53</td>
+        </tr>
+    </table>
+
+    <div class="footer">
+        <p>Questions? Contact our support team at <a href="mailto:support@technovasupply.fake">support@technovasupply.fake</a> or call 1-800-555-0123.</p>
+        <p>&copy; 2024 TechNova Supply Co. 100 Industrial Way, Seattle, WA 98101</p>
+        <p>Ref ID: EMAIL_CONF_V2_881</p>
+    </div>
+</div>
+
+</body>
+</html>

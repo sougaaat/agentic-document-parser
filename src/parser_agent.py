@@ -9,22 +9,42 @@ from langchain_core.prompts import PromptTemplate
 with open("./prompts/parser_agent_prompt.md", "r") as f:
     parser_prompt_template = f.read()
 
+with open("./prompts/HTML_parser_agent_prompt.md", "r") as f:
+    html_parser_prompt_template = f.read()
+
 ## function definition for Parser Agent
 def parser(state: DocumentState):
     pydantic_schema = create_model("DocumentSchema", **state["document_schema"])
     output_parser = JsonOutputParser(pydantic_object=pydantic_schema)
-    parser_prompt = PromptTemplate(
-        template=parser_prompt_template,
-        input_variables=["raw_text", "document_type"],
-        partial_variables={"format_instructions": output_parser.get_format_instructions()}
-    )
-    chain = parser_prompt | llm | output_parser
-    resp = chain.invoke(
-        {
-            "document_type": state["document_type"],
-            "raw_text": state["raw_text"]
-        }
-    )
+    
+    ## one for simple raw text and another for HTML content
+    if state['file_type'] == 'html':
+        parser_prompt = PromptTemplate(
+            template=html_parser_prompt_template,
+            input_variables=["raw_html", "document_type"],
+            partial_variables={"format_instructions": output_parser.get_format_instructions()}
+        )
+        chain = parser_prompt | llm | output_parser
+        resp = chain.invoke(
+            {
+                "document_type": state["document_type"],
+                "raw_html": state["raw_text"]
+            }
+        )
+    else:
+        parser_prompt = PromptTemplate(
+            template=parser_prompt_template,
+            input_variables=["raw_text", "document_type"],
+            partial_variables={"format_instructions": output_parser.get_format_instructions()}
+        )
+        chain = parser_prompt | llm | output_parser
+        resp = chain.invoke(
+            {
+                "document_type": state["document_type"],
+                "raw_text": state["raw_text"]
+            }
+        )
+    
     return {"structured_output": resp}
 
 ## ---- TEST ----

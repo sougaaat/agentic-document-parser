@@ -3,7 +3,15 @@ from langchain_core.messages import HumanMessage
 from src.agent_schema import DocumentState
 from langchain_community.document_loaders import PyPDFLoader, Docx2txtLoader
 from src.resources import ocr_llm
+# from bs4 import BeautifulSoup
 import base64
+
+## simple text handler (.txt and .md)
+def simple_text_extractor(state: DocumentState):
+    with open(state['file_path'], 'r', encoding='utf-8') as f:
+        raw_text = f.read()
+
+    return {'raw_text': raw_text}
 
 ## pdf/docx loader
 def document_extractor(state: DocumentState):
@@ -38,6 +46,17 @@ def image_extractor(state: DocumentState):
     resp = ocr_llm.invoke([message])
     return {'raw_text': resp.content}
 
+# ## text extraction from HTML files
+def html_extractor(state: DocumentState):
+    ## open the html file in text format
+    with open(state['file_path'], "r", encoding="utf-8") as f:
+        html_string = f.read()
+
+    # soup = BeautifulSoup(html_content, "html.parser")
+    # content_wo_html_tags = soup.get_text(separator=" ", strip=True)
+
+    return {"raw_text": html_string}
+
 ## ---- TEST ----
 if __name__ == "__main__":
     # ## text extraction from documents(pdf, docx)
@@ -47,15 +66,25 @@ if __name__ == "__main__":
     # }
     # result = document_extractor(initial_state)
 
-    ## text extraction from images(png, jpg, jpeg)
-    initial_state = {
-        "file_type": "png",
-        "file_path": "./data/hand-written-parking-receipt.jpg"
-    }
-    result = image_extractor(initial_state)
+    # ## text extraction from images(png, jpg, jpeg)
+    # initial_state = {
+    #     "file_type": "png",
+    #     "file_path": "./data/hand-written-parking-receipt.jpg"
+    # }
+    # result = image_extractor(initial_state)
 
-    ## print extracted text
-    print(result['raw_text'])
+    # ## print extracted text
+    # print(result['raw_text'])
+
+    # ## for an HTML file
+    # initial_state = {'file_path': './data/order_confirmation.html'}
+    # plain_text = html_extractor(initial_state)
+    # print(plain_text['raw_text'])
+
+    ## for a scanned PDF
+    initial_state = {'file_path': './data/hand-written-parking-receipt.pdf', 'file_type': 'pdf'}
+    result = document_extractor(initial_state)
+    print(result)
 
     # """
     # (agentic-document-parser) C:\Users\sodey\Downloads\_projects\agentic-document-parser>uv run -m src.extractor_agent

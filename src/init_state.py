@@ -4,5 +4,6 @@ from src.agent_schema import DocumentState
 def init_state(state: DocumentState):
     return {
         **state,
-        "iterations": 0
+        "iterations": 0,
+        "triggered_pdf2image": False
     }

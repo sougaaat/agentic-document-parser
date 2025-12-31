@@ -8,8 +8,10 @@ class DocumentState(TypedDict):
     validation_score_threshold: float ## user_input
     max_iterations_allowed: int ## user_input
     iterations: Annotated[int, add]
-    file_type: Literal['pdf', 'docx', 'png', 'jpg', 'jpeg']
+    file_type: Literal['plain_text', 'pdf', 'docx', 'img', 'html']
     raw_text: str
+    successful_extraction: bool
+    triggered_pdf2image: bool
     document_type: str
     document_schema: Dict
     structured_output: Dict

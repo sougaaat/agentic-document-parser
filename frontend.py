@@ -13,7 +13,7 @@ if "button_status" not in st.session_state:
 ## input from the user's side
 uploaded_file = st.file_uploader(
     label="Choose a file to extract",
-    type=[".pdf", ".docx", ".png", ".jpeg"]
+    type=[".pdf", ".docx", ".png", ".jpeg", ".txt", ".md", ".html"]
 )
 
 validation_threshold = st.number_input("Pick a Validation Thresold", min_value=0.0, max_value=1.0, value=0.5, step=0.05)
@@ -44,7 +44,10 @@ if submit:
     workflow = build_graph()
     result = workflow.invoke(initial_state)
 
-    st.json(result)
+    if result['successful_extraction']:
+        st.json(result)
+    else:
+        st.warning("Invalid Document!")
 
     ## clean up after execution
     if temp_file_path and os.path.exists(temp_file_path):
