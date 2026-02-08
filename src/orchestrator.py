@@ -8,7 +8,7 @@ from src.format_identifier_agent import identify_format, format_router
 from src.extractor_agent import simple_text_extractor, document_extractor, image_extractor, html_extractor
 from src.pdf_to_image_agent import convert_pdf_to_image
 from src.extraction_validator_agent import validate_extraction, validate_extraction_router
-from src.classifier_agent import classifier
+from src.classifier_agent import classifier, classifier_router
 from src.schema_generator_agent import schema_generator
 from src.parser_agent import parser
 from src.validator_agent import validator, validation_router
@@ -69,7 +69,17 @@ def build_graph():
         }
     )
 
-    graph.add_edge("classifier", "schema_generator")
+    # graph.add_edge("classifier", "schema_generator")
+
+    graph.add_conditional_edges(
+        source="classifier",
+        path=classifier_router,
+        path_map={
+            "INVALID INPUT": END,
+            "VALID INPUT": "schema_generator"
+        }
+    )
+
     graph.add_edge("schema_generator", "parser")
     graph.add_edge("parser", "validator")
 
@@ -77,8 +87,8 @@ def build_graph():
         source="validator",
         path=validation_router,
         path_map={
-            "retry": "format_identifier",
-            "approved": "redactor"
+            "RETRY": "format_identifier",
+            "APPROVED": "redactor"
         },
     )
 

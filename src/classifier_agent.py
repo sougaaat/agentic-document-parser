@@ -6,13 +6,13 @@ from langchain_core.prompts import PromptTemplate
 from pydantic import BaseModel, Field
 
 ## prompt for document classification
-with open("./prompts/classifier_agent_prompt.md", "r") as f:
+with open("./prompts/classifier_agent_prompt_two.md", "r") as f:
     classifier_prompt_template = f.read()
 
 ## Pydantic Object to identify document type
 class DocumentTypeIdentify(BaseModel):
     document_type: str = Field(
-        default="",
+        default="Invalid Document",
         description="The classified document type inferred from the raw extracted text."
     )
 
@@ -27,6 +27,13 @@ def classifier(state: DocumentState):
     chain = classifier_prompt | llm | parser
     resp = chain.invoke({"raw_text": state['raw_text']})
     return {"document_type": resp["document_type"]}
+
+
+def classifier_router(state: DocumentState):
+    if state['document_type'] == 'Invalid Document':
+        return "INVALID INPUT"
+    else:
+        return "VALID INPUT"
 
 ## ---- TESTING ----
 if __name__=="__main__":

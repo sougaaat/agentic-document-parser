@@ -42,12 +42,11 @@ def validator(state: DocumentState):
     return {"validated_features": resp["valid_fields"], "validation_score": validation_score}
 
 def validation_router(state: DocumentState):
-    if state['validation_score'] < state['validation_score_threshold']:
-        return "retry"
-    if state['max_iterations_allowed'] > state['iterations']:
-        return "retry"
-    
-    return "approved"
+    ## when validation_thresold hasn't met and we still have "retries"
+    if (state['validation_score'] < state['validation_score_threshold']) and (state['iterations'] < state['max_iterations_allowed']):
+        return "RETRY"
+    ## otherwise
+    return "APPROVED"
 
 ## ---- TEST -----
 if __name__ == "__main__":

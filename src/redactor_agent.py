@@ -37,6 +37,7 @@ def redactor(state: DocumentState):
     # redacted_features = resp["redacted_features"]
     # redacted_output = {k:v for k, v in state["structured_output"].items() if k not in redacted_features}
 
+    # redacted_output = {**state}["structured_output"]
     redacted_output = copy.deepcopy(state["structured_output"])
     for key in resp['redacted_features']:
         redacted_output[key] = '<REDACTED>'

@@ -18,7 +18,7 @@ os.environ['OPENAI_API_KEY'] = OPENAI_API_KEY
 POPPLER_PATH = os.getenv('POPPLER_PATH')
 
 ## chat completion model
-llm = ChatCohere(temperature=0.01)
+llm = ChatOpenAI(model="gpt-4.1-mini", temperature=0.2)
 
 ## for OCR
 ocr_llm = ChatOpenAI(temperature=0.01, model="gpt-4.1-nano")

@@ -44,10 +44,10 @@ if submit:
     workflow = build_graph()
     result = workflow.invoke(initial_state)
 
-    if result['successful_extraction']:
-        st.json(result)
+    if not result['successful_extraction'] or result.get('document_type', "Invalid Document") == "Invalid Document":
+        st.warning("Invalid Document")
     else:
-        st.warning("Invalid Document!")
+        st.write(result)
 
     ## clean up after execution
     if temp_file_path and os.path.exists(temp_file_path):
