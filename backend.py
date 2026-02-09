@@ -46,7 +46,7 @@ def parse_doc(request: GraphInput):
 
         ## in case of invalid document
         if not result['successful_extraction'] or result.get('document_type', "Invalid Document") == "Invalid Document":
-            raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail="Invalid Document")
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid Document")
 
         else:
             """
@@ -56,7 +56,7 @@ def parse_doc(request: GraphInput):
             return {"parsed_output": result["redacted_output"]}
     
     except ValidationError as e:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"{e}")
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=f"Reason:\n{e}")
 
 
 if __name__ == "__main__":

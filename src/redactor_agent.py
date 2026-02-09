@@ -21,28 +21,33 @@ class RedactionSchema(BaseModel):
 
 ## function definition for the Redactor Agent
 def redactor(state: DocumentState):
-    output_parser = JsonOutputParser(pydantic_object=RedactionSchema)
-    redaction_prompt = PromptTemplate(
-        template=redaction_prompt_template,
-        input_variables=["document_type", "document_json"],
-        partial_variables={"format_instructions": output_parser.get_format_instructions()}
-    )
-    chain = redaction_prompt | llm | output_parser
-    resp = chain.invoke(
-        {
-            "document_type": state["document_type"],
-            "document_json": state["structured_output"],
-        }
-    )
-    # redacted_features = resp["redacted_features"]
-    # redacted_output = {k:v for k, v in state["structured_output"].items() if k not in redacted_features}
+    ## check if the `validation_score` is equal to or higher than the `validation_score_threshold`
+    ## if yes, then REDACT PII
+    if state['validation_score'] >= state['validation_score_threshold']: 
+        output_parser = JsonOutputParser(pydantic_object=RedactionSchema)
+        redaction_prompt = PromptTemplate(
+            template=redaction_prompt_template,
+            input_variables=["document_type", "document_json"],
+            partial_variables={"format_instructions": output_parser.get_format_instructions()}
+        )
+        chain = redaction_prompt | llm | output_parser
+        resp = chain.invoke(
+            {
+                "document_type": state["document_type"],
+                "document_json": state["structured_output"],
+            }
+        )
 
-    # redacted_output = {**state}["structured_output"]
-    redacted_output = copy.deepcopy(state["structured_output"])
-    for key in resp['redacted_features']:
-        redacted_output[key] = '<REDACTED>'
+        # redacted_output = {**state}["structured_output"]
+        redacted_output = copy.deepcopy(state["structured_output"])
+        for key in resp['redacted_features']:
+            redacted_output[key] = '<REDACTED>'
 
-    return {"redacted_output": redacted_output, "redacted_features": resp["redacted_features"]}
+        return {"redacted_output": redacted_output, "redacted_features": resp["redacted_features"]}
+    
+    ## if no, that means the maximum retries has been reached yet the validation_score_threshold couldn't be achieved
+    else:
+        return {{"redacted_output": None, "redacted_features": [], "successful_extraction": False}}
 
 ## ---- TEST -----
 if __name__ == "__main__":
