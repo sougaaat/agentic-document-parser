@@ -3,6 +3,7 @@ from fastapi import FastAPI, status, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from src.orchestrator import build_graph
 import uvicorn
+import os
 from pydantic import BaseModel, Field, ValidationError
 from typing import Dict, Any
 
@@ -35,26 +36,29 @@ def check_health():
 def parse_doc(request: GraphInput):    
     ## request body validation
     try:
-        initial_state = {
-            "file_path": request.file_path,
-            "validation_score_threshold": request.validation_score_threshold,
-            "max_iterations_allowed": request.max_iterations_allowed
-        }
+        if os.path.exists(request.file_path):
+            initial_state = {
+                "file_path": request.file_path,
+                "validation_score_threshold": request.validation_score_threshold,
+                "max_iterations_allowed": request.max_iterations_allowed
+            }
 
-        workflow = build_graph()
-        result: Dict[str, Any] = workflow.invoke(initial_state)
+            workflow = build_graph()
+            result: Dict[str, Any] = workflow.invoke(initial_state)
 
-        ## in case of invalid document
-        if not result['successful_extraction'] or result.get('document_type', "Invalid Document") == "Invalid Document":
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid Document")
+            ## in case of invalid document
+            if not result['successful_extraction'] or result.get('document_type', "Invalid Document") == "Invalid Document":
+                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid Document")
 
+            else:
+                """
+                `result` includes the entire state of the LangGraph output. But the user should only be concerned
+                with the final redacted output.
+                """
+                return {"parsed_output": result["redacted_output"]}
         else:
-            """
-            `result` includes the entire state of the LangGraph output. But the user should only be concerned
-            with the final redacted output.
-            """
-            return {"parsed_output": result["redacted_output"]}
-    
+            raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=f"File at [{os.path.join(request.file_path)}] doesn't exist!")
+        
     except ValidationError as e:
         raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=f"Reason:\n{e}")
 

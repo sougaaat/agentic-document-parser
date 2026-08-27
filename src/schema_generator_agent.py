@@ -78,3 +78,8 @@ if __name__=="__main__":
     }
     doc_schema = schema_generator(state=initial_state)
     print(doc_schema)
+
+    # """Output
+    # (agentic-document-parser) C:\Users\sodey\Downloads\_dev\agentic-document-parser>uv run -m src.schema_generator_agent
+    # {'document_schema': {'name': <class 'str'>, 'father_s_name': <class 'str'>, 'date_of_birth': <class 'str'>, 'pan': <class 'str'>}}
+    # """
